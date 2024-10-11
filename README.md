@@ -42,8 +42,3 @@ Broid is a platform designed to revolutionize traditional fashion by offering mo
 - **GET /api/products**: Fetch all available agbada outfits and accessories.
 - **POST /api/customize**: Customize an agbada outfit by selecting detachable embroidery.
 - **POST /api/orders**: Place an order for customized agbada outfits.
-
----
-
-GIve it a star!
-"""
