@@ -154,7 +154,7 @@ app.post('/upload-using-link', async (request, response) => {
     }
 });
 
-const imageMiddleware = multer({dest: 'images'})
+const imageMiddleware = multer({dest: 'images'});
 
 app.post('/upload', (request, response) => {
 
