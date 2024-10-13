@@ -17,7 +17,10 @@ const imageUploadRoutes = require('./routes/imageUploadRoutes')
 app.use(express.json());
 app.use(cookieParser());
 app.use(helmet());
-app.use(cors());
+app.use(cors({
+    credentials: true,
+    origin: 'http://localhost:5173',
+}));
 app.options('*', cors());
 app.use('/images', express.static(path.join(__dirname, '/images')));
 
@@ -26,10 +29,10 @@ app.use('/', userRoutes);
 app.use('/', imageUploadRoutes);
 
 // test route
-app.get('/test', (request, response) => {
-    response.json('test ok');
-});
+app.get('/test', (req, res) => {
+    res.send('Server is working');
+  });
 
-app.listen(PORT, () => {
-    console.log(`Server running on ${PORT}`);
-});
+app.listen(4000, () => {
+    console.log('Server running on port 4000');
+  });
