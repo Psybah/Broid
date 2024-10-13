@@ -30,7 +30,7 @@ app.use('/', imageUploadRoutes);
 
 // test route
 app.get('/test', (req, res) => {
-    res.send('Server is working');
+    res.json({message: 'Server is working'});
   });
 
 app.listen(4000, () => {

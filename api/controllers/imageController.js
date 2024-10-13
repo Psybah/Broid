@@ -1,33 +1,45 @@
 const fs = require('fs');
 const path = require('path');
-const imageDownloader = require('image-downloader');
+const fsExtra = require('fs-extra');
+const axios = require('axios');
 
 // upload embroidery photo using link
 const uploadImageUsingLink = async (request, response) => {
     if (request.cookies.token) {
         if ('link' in request.body) {
             const { link } = request.body;
-            const photoName = 'photo' + Date.now() + '.jpg';
 
+            const photoName = 'photo' + Date.now() + '.jpg';
             const imagesDir = path.join(__dirname, '../images/');
 
             // Ensure images directory exists
-            if (!fs.existsSync(imagesDir)) {
-                fs.mkdirSync(imagesDir, { recursive: true });
-            }
+            fsExtra.ensureDirSync(imagesDir);
 
             try {
-                await imageDownloader.image({
+                const axiosResponse = await axios({
+                    method: 'get',
                     url: link,
-                    dest: path.join(imagesDir, photoName),
+                    responseType: 'stream',
                 });
 
-                response.status(200).json({ photo: photoName });
+                // Define the path to save the image
+                const destinationPath = path.join(imagesDir, photoName);
+
+                const writer = fs.createWriteStream(destinationPath);
+                axiosResponse.data.pipe(writer);
+
+                writer.on('finish', () => {
+                    response.status(200).json({ message: 'Image uploaded successfully', path: destinationPath });
+                });
+
+                writer.on('error', (error) => {
+                    response.status(500).json({message: 'Error writing image file', error: error.message});
+                });
             } catch (error) {
-                response.status(500).json({ error: error.message });
+                response.status(500).json({ message: 'Failed to download image', error: error.message });
             }
         } else {
-            response.status(400).json({ error: 'No link provided' });
+            response.status(400).json({ error: 'Image URL is required' });
         }
     } else {
         response.status(401).json({ error: 'Invalid token' });

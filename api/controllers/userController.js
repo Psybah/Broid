@@ -96,8 +96,25 @@ const getProfile = async (request, response) => {
 
 // logout route
 const logoutUser = (request, response) => {
-    response.clearCookie('token').json({ message: 'Logged out' });
-}
+    const token = request.cookies.token;
+    if (token) {
+        try {
+            jwt.verify(
+                token,
+                process.env.JWT_SECRET_KEY
+            );
 
+            response.clearCookie('token').json({ message: 'Logged out'});
+        } catch (error) {
+            if (error.name === 'JsonWebTokenError') {
+                response.status(401).json({ error: 'Invalid token' });
+            } else {
+                response.status(500).json({ error: error.message });
+            }
+        }
+    } else {
+        response.status(401).json({ error: 'No token provided' });
+    }
+}
 
 module.exports = {registerUser, loginUser, getProfile, logoutUser};

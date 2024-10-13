@@ -1,0 +1,46 @@
+@base_url = http://localhost:4000
+
+
+### Test
+GET {{base_url}}/test
+
+
+### Register user
+POST {{base_url}}/register
+Content-Type: application/json
+
+{
+"name": "Dwayne Johnson",
+"email": "dwayne@gmail.com",
+"password": "dwaynepassword"
+}
+
+
+### Login user
+POST {{base_url}}/login
+Content-Type: application/json
+
+{
+"email": "dwayne@gmail.com",
+"password": "dwaynepassword"
+}
+
+
+### Get profile with Cookie
+GET {{base_url}}/profile
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGMyM2JlN2UzOTAyNDU2Y2JjYWJlZCIsImVtYWlsIjoiZHdheW5lQGdtYWlsLmNvbSIsIm5hbWUiOiJEd2F5bmUgSm9obnNvbiIsImlhdCI6MTcyODg0ODkzOH0.nX1iqab7l0iz_vxZUzsvJxNf94_OcMwlLEa8aH3XjrU
+
+
+### Upload Photo using Link
+POST {{base_url}}/upload-using-link
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGMyM2JlN2UzOTAyNDU2Y2JjYWJlZCIsImVtYWlsIjoiZHdheW5lQGdtYWlsLmNvbSIsIm5hbWUiOiJEd2F5bmUgSm9obnNvbiIsImlhdCI6MTcyODg0ODkzOH0.nX1iqab7l0iz_vxZUzsvJxNf94_OcMwlLEa8aH3XjrU
+Content-Type: application/json
+
+{
+"link": "https://images.pexels.com/photos/7859630/pexels-photo-7859630.jpeg"
+}
+
+
+### Logout user
+GET {{base_url}}/logout
+Cookie: token=eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6IjY3MGMyM2JlN2UzOTAyNDU2Y2JjYWJlZCIsImVtYWlsIjoiZHdheW5lQGdtYWlsLmNvbSIsIm5hbWUiOiJEd2F5bmUgSm9obnNvbiIsImlhdCI6MTcyODg0ODkzOH0.nX1iqab7l0iz_vxZUzsvJxNf94_OcMwlLEa8aH3XjrU
