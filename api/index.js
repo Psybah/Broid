@@ -9,7 +9,7 @@ const helmet = require('helmet');
 const path = require('path');
 const app = express();
 
-const bcryptSalt = bcrypt.genSalt(10);
+const bcryptSalt = bcrypt.genSaltSync(10);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URL);
