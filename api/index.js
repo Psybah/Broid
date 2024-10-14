@@ -3,9 +3,13 @@ const cors = require('cors');
 const mongoose = require('mongoose');
 require('dotenv').config();
 const cookieParser = require('cookie-parser');
+const User = require('./models/User.js');
+const bcrypt = require('bcryptjs');
 const helmet = require('helmet');
 const path = require('path');
 const app = express();
+
+const bcryptSalt = bcrypt.genSalt(10);
 
 const PORT = process.env.PORT || 4000;
 mongoose.connect(process.env.MONGODB_URL);
@@ -28,10 +32,22 @@ app.use('/images', express.static(path.join(__dirname, '/images')));
 app.use('/', userRoutes);
 app.use('/', imageUploadRoutes);
 
+
 // test route
 app.get('/test', (req, res) => {
-    res.json({message: 'Server is working'});
+    res.send('Server is working');
   });
+
+app.post('/register', async (req, res) => {
+    const {name,email,password} = req.body;
+    const userDoc = await User.create({
+      name,
+      email,
+      password:bcrypt.hashSync(password, bcryptSalt),
+    });
+
+    res.json(userDoc);
+});
 
 app.listen(4000, () => {
     console.log('Server running on port 4000');
