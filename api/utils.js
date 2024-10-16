@@ -1,4 +1,5 @@
 const bcrypt = require('bcryptjs');
+const jwt = require("jsonwebtoken");
 
 /**
  * Encrypts user password sent from frontend register form
@@ -20,4 +21,16 @@ function checkPassword(plainPassword, hashedPassword) {
     return bcrypt.compareSync(plainPassword, hashedPassword);
 }
 
-module.exports = { encryptPassword, checkPassword };
+/**
+ * Extract user data from token got from request.cookies
+ * @param token
+ * @returns {Object} - userData
+ */
+function getUserDataFromToken(token) {
+    return jwt.verify(
+        token,
+        process.env.JWT_SECRET_KEY
+    );
+}
+
+module.exports = { encryptPassword, checkPassword, getUserDataFromToken };
