@@ -31,8 +31,17 @@ app.use(
         origin: 'http://localhost:5173',
     })
 );
-app.options('*', cors());
+// app.options('*', cors());
+app.use('/uploads', express.static(path.join(__dirname, '/uploads')));
 app.use('/images', express.static(path.join(__dirname, '/images')));
+
+// Middleware to add CORS headers to all responses
+app.use((req, res, next) => {
+    res.header('Access-Control-Allow-Origin', 'http://localhost:5173');
+    res.header('Access-Control-Allow-Headers', 'Origin, X-Requested-With, Content-Type, Accept');
+    res.header('Access-Control-Allow-Credentials', 'true');
+    next();
+});
 
 app.use('/', userRoutes);
 app.use('/', imageUploadRoutes);
