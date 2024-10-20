@@ -6,7 +6,9 @@ const {getUserDataFromToken} = require('../utils');
 const bookEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
-        const {embroidery, name, phone,quantity, price} = request.body;
+        const { name, description, addedPhotos,
+            perks, extraInfo, price, packs, 
+            orderDate, deliveryDate} = request.body;
         if (!embroidery || !name || !phone || !quantity) return response.status(400).json({error: 'Incomplete' +
                 ' booking info'});
 
