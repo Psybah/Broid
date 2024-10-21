@@ -86,14 +86,18 @@ const uploadImageUsingLink = async (request, response) => {
 
 // upload photos
 const uploadPhotos = async (request, response) => {
+
     if (!request.files)
-        return response.status(400).json({ error: 'Invalid request' });
+        return response.status(400).json({ error: 'Please Provide your Broid images' });
+
+
+    console.log(request.files);
 
     const { token } = request.cookies;
 
     if (token) {
         try {
-            _ = getUserDataFromToken(token);
+            // _ = getUserDataFromToken(token);
 
             const uploadedFiles = [];
 
@@ -102,18 +106,19 @@ const uploadPhotos = async (request, response) => {
                 iterator < request.files.length;
                 iterator++
             ) {
-                const { path, originalName } = request.files[iterator];
-                const photoNameSplit = originalName.split('.');
+                const { path, originalname } = request.files[iterator];
+                const photoNameSplit = originalname.split('.');
                 const extension = photoNameSplit[photoNameSplit.length - 1];
                 const newPath = path + '.' + extension;
 
                 // Rename the file
                 fs.renameSync(path, newPath);
+                // uploadedFiles.push(newPath);
                 uploadedFiles.push(newPath.replace('uploads/', '')); // Append to uploaded files list
             }
             response.status(200).json({
                 message: 'Photos uploaded successfully',
-                photos: request.files,
+                photos: uploadedFiles,
             });
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {

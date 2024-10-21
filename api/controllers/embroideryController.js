@@ -5,8 +5,9 @@ const jwt = require("jsonwebtoken");
 const createEmbroidery = async (request, response) => {
     if (!request.body) return response.status(400).json({error: 'Input fields empty'});
 
-    const {name, photos, description,
-        price, features, extraInfo} = request.body;
+    const {name, description, perks, 
+        addedPhotos, extraInfo, price, packs, 
+        orderDate, deliveryDate} = request.body;
     const token = request.cookies.token;
     if (token) {
         try {
@@ -19,8 +20,9 @@ const createEmbroidery = async (request, response) => {
                 return response.status(404).json({ error: 'User not found' });
 
             const embroideryDocument = await Embroidery.create({
-                user: userData.id,
-                name, photos, description, price, features, extraInfo
+                user: userData.id, name, description, perks, 
+				addedPhotos, extraInfo, price, packs, 
+				orderDate, deliveryDate
             });
             response.status(200).json(embroideryDocument);
         } catch (error) {
@@ -82,7 +84,9 @@ const getEmbroideryById = async (request, response) => {
 const updateUserEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
-        const {id, name, photos, description, price, features, extraInfo} = request.body;
+        const {id, name, description, perks, 
+            addedPhotos, extraInfo, price, packs, 
+            orderDate, deliveryDate} = request.body;
         try {
             const userData = jwt.verify(
                 token,
@@ -97,11 +101,14 @@ const updateUserEmbroidery = async (request, response) => {
             if (userData.id === embroideryDocument.user.toString()) {
                 embroideryDocument.set({
                     name: name || embroideryDocument.name,
-                    photos: photos || embroideryDocument.photos,
                     description: description || embroideryDocument.description,
+                    perks: perks || embroideryDocument.perks,
+                    addedPhotos: addedPhotos|| embroideryDocument.addedPhotos,
+                    extraInfo: extraInfo || embroideryDocument.extraInfo,
                     price: price || embroideryDocument.price,
-                    features: features|| embroideryDocument.features,
-                    extraInfo: extraInfo || embroideryDocument.extraInfo
+                    packs: packs|| embroideryDocument.packs,
+                    orderDate: orderDate|| embroideryDocument.orderDate,
+                    deliveryDate: deliveryDate|| embroideryDocument.deliveryDate,
                 });
                 embroideryDocument.save();
                 response.status(200).json({message: 'Embroidery successfully updated'});

@@ -1,13 +1,13 @@
-/* eslint-disable react/prop-types */
+// eslint-disable-next-line react/prop-types
 export default function Perks({selected,onChange}) {
 function handleCbClick(ev) {
   const {checked, name} = ev.target;
   if (checked) {
     onChange([...selected,name]);
   } else {
+    // eslint-disable-next-line react/prop-types
     onChange([...selected.filter(selectedName => selectedName !== name)]);
   }
-  
 }
   return (
     <>
