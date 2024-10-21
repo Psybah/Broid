@@ -84,7 +84,7 @@ const getEmbroideryById = async (request, response) => {
 const updateUserEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
-        const {id, name, description, perks, 
+        const {name, description, perks, 
             addedPhotos, extraInfo, price, packs, 
             orderDate, deliveryDate} = request.body;
         try {
