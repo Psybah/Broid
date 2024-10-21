@@ -130,7 +130,7 @@ export default function BroidsPage() {
 									type='text'
 									value={orderDate}
 									onChange={(ev) => setOrderDate(ev.target.value)}
-									placeholder='dd/mm/yyy'
+									placeholder='dd/mm/yyyy'
 								/>
 							</div>
 							<div>
@@ -139,7 +139,7 @@ export default function BroidsPage() {
 									type='text'
 									value={deliveryDate}
 									onChange={(ev) => setDeliveryDate(ev.target.value)}
-									placeholder='dd/mm/yyy'
+									placeholder='dd/mm/yyyy'
 								/>
 							</div>
 						</div>
