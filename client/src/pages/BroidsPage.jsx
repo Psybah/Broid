@@ -31,15 +31,16 @@ export default function BroidsPage() {
 			</>
 		);
 	}
-	
+
 	async function addNewEmbroidery(ev) {
 		ev.preventDefault();
 		await axios.post('/embroidery', {
-			name, description, perks, 
-				addedPhotos, extraInfo, price, packs, 
+			name, description, perks,
+				addedPhotos, extraInfo, price, packs,
 				orderDate, deliveryDate
 			});
-			setRedirect('/account/embroidery');
+		console.log(addedPhotos);
+		setRedirect('/account/embroidery');
 	}
 
 	if (redirect) {

@@ -8,11 +8,10 @@ const EmbroiderySchema = new Schema({
     photos: [String],
     perks: [String],
     extraInfo: String,
-    price: Number,
+    price: String,
     packs: Number,
-    orderDate: Number,
-    deliveryDate: Number,
-    
+    orderDate: String,
+    deliveryDate: String,
 });
 
 const EmbroideryModel = mongoose.model('Embroidery', EmbroiderySchema);
