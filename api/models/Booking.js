@@ -1,13 +1,18 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema, SchemaTypes } = mongoose;
 
 const BookingSchema = new Schema({
-    embroidery: {type: mongoose.Schema.Types.ObjectId, ref: 'Embroidery', required: true},
-    bookedBy: {type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true},
+    embroidery: {type: SchemaTypes.ObjectId, ref: 'Embroidery', required: true},
+    bookedBy: {type: SchemaTypes.ObjectId, ref: 'User', required: true},
     name: {type: String, required: true},
-    phone: {type: String, required: true},
-    quantity: {type: String, required: true},
-    price: Number
+    decription: String,
+    addedPhotos: [String],
+    perks: {type: [String], required: true},
+    extraInfo: {type: String, required: true},
+    price: {type: String, required: true},
+    packs: {type: Number, required: true},
+    orderDate: {type: String, required: true},
+    deliveryDate: {type: String, required: true},
 });
 
 const BookingModel = mongoose.model('Booking', BookingSchema);

@@ -1,8 +1,8 @@
 const mongoose = require('mongoose');
-const { Schema } = mongoose;
+const { Schema, SchemaTypes } = mongoose;
 
 const EmbroiderySchema = new Schema({
-    user: {type: mongoose.Schema.Types.ObjectId, ref: 'User'},
+    user: {type: SchemaTypes.ObjectId, ref: 'User'},
     name: String,
     description: String,
     photos: [String],

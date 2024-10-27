@@ -1,24 +1,26 @@
 const Booking = require('../models/Booking');
-const {getUserDataFromToken} = require('../utils');
-// const jwt = require("jsonwebtoken");
+// const {getUserDataFromToken} = require('../utils');
+const jwt = require("jsonwebtoken");
 
 // make a booking to purchase an embroidery
 const bookEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
-        const { name, description, addedPhotos,
-            perks, extraInfo, price, packs, 
+        const { embroideryId, name, description, addedPhotos,
+            perks, extraInfo, price, packs,
             orderDate, deliveryDate} = request.body;
-        if (!embroidery || !name || !phone || !quantity) return response.status(400).json({error: 'Incomplete' +
-                ' booking info'});
 
         try {
-            const userData = getUserDataFromToken(token);
+            const userData =  jwt.verify(
+                token,
+                process.env.JWT_SECRET_KEY
+            );
+
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 
             const bookingDocument = await Booking.create({
-                embroidery, bookedBy: userData.id, name, phone,quantity, price});
+                embroidery: embroideryId, bookedBy: userData.id, name, description, addedPhotos, perks, extraInfo, price, packs, orderDate, deliveryDate});
 
             response.status(201).json(bookingDocument);
         } catch (error) {
@@ -34,7 +36,11 @@ const getUserBookings = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
         try {
-            const userData = getUserDataFromToken(token);
+            const userData =  jwt.verify(
+                token,
+                process.env.JWT_SECRET_KEY
+            );
+
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 

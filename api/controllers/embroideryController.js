@@ -89,10 +89,14 @@ const getEmbroideryById = async (request, response) => {
         }
 
         try {
-            const foundEmbroidery = await Embroidery.findById(id);
+            const foundEmbroidery = await Embroidery.findOne({
+                _id: id,
+            });
 
             if (!foundEmbroidery)
-                return response.status(404).json({ error: 'Embroidery not found' });
+                return response
+                    .status(404)
+                    .json({ error: 'Embroidery not found' });
 
             response.status(200).json(foundEmbroidery);
             console.log(foundEmbroidery);
@@ -110,6 +114,7 @@ const updateUserEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
         const {
+            id,
             name,
             description,
             perks,
@@ -126,7 +131,7 @@ const updateUserEmbroidery = async (request, response) => {
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 
-            const embroideryDocument = await Embroidery.findById(id);
+            const embroideryDocument = await Embroidery.findById(id).exec();
 
             if (userData.id === embroideryDocument.user.toString()) {
                 embroideryDocument.set({
@@ -136,17 +141,19 @@ const updateUserEmbroidery = async (request, response) => {
                     addedPhotos: addedPhotos || embroideryDocument.addedPhotos,
                     extraInfo: extraInfo || embroideryDocument.extraInfo,
                     price: price || embroideryDocument.price,
-                    packs: packs || embroideryDocument.packs,
+                    packs: Number(packs) || embroideryDocument.packs,
                     orderDate: orderDate || embroideryDocument.orderDate,
                     deliveryDate:
                         deliveryDate || embroideryDocument.deliveryDate,
                 });
                 embroideryDocument.save();
-                response.status(200).json({
-                    message: 'Embroidery successfully updated',
-                    embroideryDocument: embroideryDocument,
-                });
-                console.log(embroideryDocument);
+                response
+                    .status(200)
+                    .json({ message: 'Embroidery successfully updated' });
+                console.log(
+                    'Embroidery successfully updated',
+                    embroideryDocument
+                );
             }
         } catch (error) {
             if (error.name === 'JsonWebTokenError') {
