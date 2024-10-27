@@ -5,7 +5,7 @@ const axios = require('axios');
 const imageDownloader = require('image-downloader');
 const { getUserDataFromToken } = require('../utils');
 
-// upload embroidery photo using link
+// uploads the embroidery photo using link
 // const uploadImageUsingLink = async (request, response) => {
 //     if (request.cookies.token) {
 //         if (!getUserDataFromToken(request.cookies.token))
@@ -17,7 +17,7 @@ const { getUserDataFromToken } = require('../utils');
 //             const photoName = 'photo' + Date.now() + '.jpg';
 //             const imagesDir = path.join(__dirname, '../images/');
 
-//             // Ensure images directory exists
+//             // Ensure the images directory exists
 //             fsExtra.ensureDirSync(imagesDir);
 
 //             try {

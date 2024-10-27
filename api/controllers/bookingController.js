@@ -29,7 +29,7 @@ const bookEmbroidery = async (request, response) => {
     }
 }
 
-// get bookings made by a user
+// get the bookings made by a user
 const getUserBookings = async (request, response) => {
     const token = request.cookies.token;
     if (token) {

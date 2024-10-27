@@ -51,7 +51,7 @@ const createEmbroidery = async (request, response) => {
     }
 };
 
-// get a user's embroideries
+// get the user's embroideries
 const getUserEmbroideries = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
