@@ -1,11 +1,11 @@
 # Broid: Versatile Agbada - Reinventing Traditional Fashion
 
 ## Project Overview
-Broid is a platform designed to revolutionize traditional fashion by offering modular agbada outfits. These outfits come with detachable embroidery, allowing users to switch designs for different occasions, providing both flexibility and sustainability.
+Broid is a platform that aims to revolutionise traditional fashion by providing modular agbada outfits. These outfits comes with detachable embroidery, which allows customers to replace designs for different situations, enabling both flexibility and sustainability..
 
 ## Features
 - **Modular Agbada**: Customizable agbada outfits with detachable embroidery.
-- **Customization Options**: Users can choose embroidery patterns.
+- **Customization Options**: Users can choose their preffered embroidery patterns.
 - **User-Friendly Interface**: An easy-to-use interface to select and preview agbada customizations.
 - **Sustainability**: Reuse agbada outfits by changing embroidery for different events.
 
