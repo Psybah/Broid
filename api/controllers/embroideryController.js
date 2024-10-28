@@ -80,10 +80,11 @@ const getUserEmbroideries = async (request, response) => {
 
 // get an embroidery by id
 const getEmbroideryById = async (request, response) => {
-    const { id } = request.params;
+    const { id } = request.body;
 
     if (id) {
         // Validate that the ID format is correct
+        const mongoose = require('mongoose');
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return response.status(400).json({ error: 'Invalid ID format' });
         }
@@ -108,6 +109,36 @@ const getEmbroideryById = async (request, response) => {
         response.status(401).json({ error: 'Embroidery id required' });
     }
 };
+
+// const getEmbroideryById = async (request, response) => {
+//     const { id } = request.params;
+
+//     if (id) {
+//         // Validate that the ID format is correct
+//         if (!mongoose.Types.ObjectId.isValid(id)) {
+//             return response.status(400).json({ error: 'Invalid ID format' });
+//         }
+
+//         try {
+//             const foundEmbroidery = await Embroidery.findOne({
+//                 _id: id,
+//             });
+
+//             if (!foundEmbroidery)
+//                 return response
+//                     .status(404)
+//                     .json({ error: 'Embroidery not found' });
+
+//             response.status(200).json(foundEmbroidery);
+//             console.log(foundEmbroidery);
+//         } catch (error) {
+//             console.log('Error fetching embroidery: ', error);
+//             response.status(400).json({ error: 'Embroidery does not exist' });
+//         }
+//     } else {
+//         response.status(401).json({ error: 'Embroidery id required' });
+//     }
+// };
 
 // update an existing Embroidery object
 const updateUserEmbroidery = async (request, response) => {
