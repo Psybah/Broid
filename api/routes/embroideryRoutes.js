@@ -5,7 +5,7 @@ const embroideryRouter = express.Router();
 
 embroideryRouter.post('/embroidery', createEmbroidery);
 embroideryRouter.get('/embroidery', getUserEmbroideries);
-embroideryRouter.get('/embroidery/:id', getEmbroideryById);
+embroideryRouter.get('/embroidery-by-id', getEmbroideryById);
 embroideryRouter.put('/update-embroidery', updateUserEmbroidery);
 embroideryRouter.get('/embroideries', getAllEmbroideries);
 
