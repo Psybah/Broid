@@ -1,8 +1,15 @@
 const Embroidery = require('../models/Embroidery');
 const jwt = require('jsonwebtoken');
 
-// create embroidery object
+/**
+ * @function createEmbroidery
+ * @desc Creates a new embroidery item and saves it in the database.
+ * @param {object} request - Express request object, expects embroidery details in `request.body`.
+ * @param {object} response - Express response object.
+ * @access Protected - Requires JWT token for authentication.
+ */
 const createEmbroidery = async (request, response) => {
+    // Validate that the request body has necessary data
     if (!request.body)
         return response.status(400).json({ error: 'Input fields empty' });
 
@@ -18,13 +25,16 @@ const createEmbroidery = async (request, response) => {
         deliveryDate,
     } = request.body;
     const token = request.cookies.token;
+    
     if (token) {
         try {
+            // Verify the JWT token to extract user data
             const userData = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 
+            // Create a new embroidery item using user-provided data
             const embroideryDocument = await Embroidery.create({
                 user: userData.id,
                 name,
@@ -37,9 +47,12 @@ const createEmbroidery = async (request, response) => {
                 orderDate,
                 deliveryDate,
             });
+
+            // Respond with the created embroidery document
             response.status(200).json(embroideryDocument);
             console.log(embroideryDocument);
         } catch (error) {
+            // Error handling for invalid token or other server errors
             if (error.name === 'JsonWebTokenError') {
                 response.status(401).json({ error: 'Invalid token' });
             } else {
@@ -47,26 +60,36 @@ const createEmbroidery = async (request, response) => {
             }
         }
     } else {
+        // If no token is found in the cookies, respond with unauthorized error
         response.status(401).json({ error: 'No token provided' });
     }
 };
 
-// get the user's embroideries
+/**
+ * @function getUserEmbroideries
+ * @desc Retrieves all embroidery items associated with the authenticated user.
+ * @param {object} request - Express request object.
+ * @param {object} response - Express response object.
+ * @access Protected - Requires JWT token for authentication.
+ */
 const getUserEmbroideries = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
         try {
+            // Verify the JWT token to extract user data
             const userData = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 
+            // Fetch all embroideries created by the authenticated user
             const embroideryDocument = await Embroidery.find({
                 user: userData.id,
             });
             response.status(200).json(embroideryDocument);
             console.log(embroideryDocument);
         } catch (error) {
+            // Error handling for invalid token or server errors
             if (error.name === 'JsonWebTokenError') {
                 response.status(401).json({ error: 'Invalid token' });
             } else {
@@ -74,22 +97,29 @@ const getUserEmbroideries = async (request, response) => {
             }
         }
     } else {
+        // If no token is found in the cookies, respond with unauthorized error
         response.status(401).json({ error: 'No token provided' });
     }
 };
 
-// get an embroidery by id
+/**
+ * @function getEmbroideryById
+ * @desc Retrieves a specific embroidery item by its ID.
+ * @param {object} request - Express request object, expects `id` in `request.body`.
+ * @param {object} response - Express response object.
+ */
 const getEmbroideryById = async (request, response) => {
     const { id } = request.body;
 
     if (id) {
-        // Validate that the ID format is correct
+        // Validate that the ID is in a correct MongoDB ObjectID format
         const mongoose = require('mongoose');
         if (!mongoose.Types.ObjectId.isValid(id)) {
             return response.status(400).json({ error: 'Invalid ID format' });
         }
 
         try {
+            // Search for the embroidery item in the database by ID
             const foundEmbroidery = await Embroidery.findOne({
                 _id: id,
             });
@@ -102,15 +132,23 @@ const getEmbroideryById = async (request, response) => {
             response.status(200).json(foundEmbroidery);
             console.log(foundEmbroidery);
         } catch (error) {
+            // Error handling for server errors
             console.log('Error fetching embroidery: ', error);
             response.status(400).json({ error: 'Embroidery does not exist' });
         }
     } else {
+        // Respond with an error if ID is missing in the request
         response.status(401).json({ error: 'Embroidery id required' });
     }
 };
 
-// update an existing Embroidery object
+/**
+ * @function updateUserEmbroidery
+ * @desc Updates an existing embroidery item owned by the authenticated user.
+ * @param {object} request - Express request object, expects embroidery details in `request.body`.
+ * @param {object} response - Express response object.
+ * @access Protected - Requires JWT token for authentication.
+ */
 const updateUserEmbroidery = async (request, response) => {
     const token = request.cookies.token;
     if (token) {
@@ -127,11 +165,13 @@ const updateUserEmbroidery = async (request, response) => {
             deliveryDate,
         } = request.body;
         try {
+            // Verify the JWT token to extract user data
             const userData = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
             if (!userData)
                 return response.status(404).json({ error: 'User not found' });
 
+            // Find the embroidery item by ID and verify ownership
             const embroideryDocument = await Embroidery.findById(id).exec();
 
             if (userData.id === embroideryDocument.user.toString()) {
@@ -147,6 +187,8 @@ const updateUserEmbroidery = async (request, response) => {
                     deliveryDate:
                         deliveryDate || embroideryDocument.deliveryDate,
                 });
+
+                // Save the updated embroidery document
                 embroideryDocument.save();
                 response
                     .status(200)
@@ -157,6 +199,7 @@ const updateUserEmbroidery = async (request, response) => {
                 );
             }
         } catch (error) {
+            // Error handling for invalid token or server errors
             if (error.name === 'JsonWebTokenError') {
                 response.status(401).json({ error: 'Invalid token' });
             } else {
@@ -164,17 +207,25 @@ const updateUserEmbroidery = async (request, response) => {
             }
         }
     } else {
+        // Respond with an error if token is missing
         response.status(401).json({ error: 'No token provided' });
     }
 };
 
-// get all existing embroideries
+/**
+ * @function getAllEmbroideries
+ * @desc Retrieves all embroidery items from the database.
+ * @param {object} request - Express request object.
+ * @param {object} response - Express response object.
+ */
 const getAllEmbroideries = async (request, response) => {
     try {
+        // Retrieve all embroideries
         const embroideries = await Embroidery.find();
         response.status(200).json(embroideries);
         console.log('All embroideries fetched');
     } catch (error) {
+        // Error handling for server errors
         response.status(400).json({
             error: `Error fetching all embroideries (${error.message})`,
         });
