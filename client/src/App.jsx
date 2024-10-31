@@ -25,6 +25,7 @@ function App() {
           <Route path="/account" element={<ProfilePage />} />
           <Route path="/account/broids" element={<BroidsPage />} />
           <Route path="/account/broids/new" element={<BroidsFormPage />} />
+          <Route path="/account/broids/:id" element={<BroidsFormPage />} />
         </Route>
       </Routes>
     </UserContextProvider>

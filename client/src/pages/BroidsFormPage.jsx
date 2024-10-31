@@ -1,11 +1,12 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import Perks from '../Perks';
 import PhotosUploader from '../PhotosUploader';
 import axios from 'axios';
 import AccountNav from '../AccountNav';
-import { Navigate } from 'react-router-dom';
+import { Navigate, useParams } from 'react-router-dom';
 
 export default function BroidsFormPage() {
+	const {id} = useParams();
 	const [name, setName] = useState('');
 	const [description, setDescription] = useState('');
 	const [perks, setPerks] = useState([]);
@@ -16,6 +17,23 @@ export default function BroidsFormPage() {
 	const [orderDate, setOrderDate] = useState('');
 	const [deliveryDate, setDeliveryDate] = useState('');
 	const [redirect, setRedirect] = useState(false);
+	useEffect(() => {
+		if (!id) {
+			return;
+		}
+		axios.get(`/embroidery-by-id/${id}`).then(response => {
+			const {data} = response;
+			setName(data.name);
+			setDescription(data.description);
+			setPerks(data.perks);
+			setAddedPhotos(data.photos);
+			setExtraInfo(data.extraInfo);
+			setPrice(data.price);
+			setPacks(data.packs);
+			setOrderDate(data.orderDate);
+			setDeliveryDate(data.deliveryDate);
+		});
+	}, [id]);
 	function inputHeader(text) {
 		return <h2 className="text-2xl mt-4">{text}</h2>;
 	}
@@ -33,14 +51,26 @@ export default function BroidsFormPage() {
 		);
 	}
 
-	async function addNewEmbroidery(ev) {
+	async function saveBroids(ev) {
 		ev.preventDefault();
-		await axios.post('/embroidery', {
+		const broidData = {
 			name, description, perks,
-			addedPhotos, extraInfo, price,
-			packs, orderDate, deliveryDate
-		});
-		setRedirect(true);
+				addedPhotos, extraInfo, price,
+				packs, orderDate, deliveryDate
+		};
+		if (id) {
+			//update
+			await axios.put('/update-embroidery', {
+				id,
+				...broidData
+			});
+			setRedirect(true);
+		} else {
+			//new broids
+			await axios.post('/embroidery', broidData);
+			setRedirect(true);
+		}
+		
 	}
 
 	if (redirect) {
@@ -50,7 +80,7 @@ export default function BroidsFormPage() {
 	return (
 		<div>
 			<AccountNav	/>
-			<form className="text-left" onSubmit={addNewEmbroidery}>
+			<form className="text-left" onSubmit={saveBroids}>
 				{preInput('Name', 'Enter the name of your Embroidery')}
 				<input
 					type="text"

@@ -9,10 +9,7 @@ const jwt = require('jsonwebtoken');
  * @access Protected - Requires JWT token for authentication.
  */
 const createEmbroidery = async (request, response) => {
-    // Validate that the request body has necessary data
-    if (!request.body)
-        return response.status(400).json({ error: 'Input fields empty' });
-
+    // Destructure fields from request body and validate required fields
     const {
         name,
         description,
@@ -23,16 +20,23 @@ const createEmbroidery = async (request, response) => {
         packs,
         orderDate,
         deliveryDate,
-    } = request.body;
+    } = request.body || {};
+
+    // Check if required fields are present
+    if (!name || !description || !price || !packs || !orderDate || !deliveryDate) {
+        return response.status(400).json({ error: 'Required fields are missing' });
+    }
+
     const token = request.cookies.token;
-    
+
     if (token) {
         try {
             // Verify the JWT token to extract user data
             const userData = jwt.verify(token, process.env.JWT_SECRET_KEY);
 
-            if (!userData)
+            if (!userData) {
                 return response.status(404).json({ error: 'User not found' });
+            }
 
             // Create a new embroidery item using user-provided data
             const embroideryDocument = await Embroidery.create({
@@ -40,7 +44,7 @@ const createEmbroidery = async (request, response) => {
                 name,
                 description,
                 perks,
-                addedPhotos,
+                photos: addedPhotos, // Ensure it aligns with schema
                 extraInfo,
                 price,
                 packs: Number(packs),
@@ -50,9 +54,10 @@ const createEmbroidery = async (request, response) => {
 
             // Respond with the created embroidery document
             response.status(200).json(embroideryDocument);
-            console.log(embroideryDocument);
+            console.log("Embroidery created:", embroideryDocument);
         } catch (error) {
             // Error handling for invalid token or other server errors
+            console.log("Error in createEmbroidery:", error); // Log error for debugging
             if (error.name === 'JsonWebTokenError') {
                 response.status(401).json({ error: 'Invalid token' });
             } else {
@@ -64,6 +69,7 @@ const createEmbroidery = async (request, response) => {
         response.status(401).json({ error: 'No token provided' });
     }
 };
+
 
 /**
  * @function getUserEmbroideries
