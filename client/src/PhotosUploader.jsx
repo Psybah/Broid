@@ -32,9 +32,10 @@ export default function PhotosUploader() {
 	}
 
 	function removePhoto(filename) {
-		onChange([...addedPhotos.filter(photo => !== filename)]);
+		onChange([...addedPhotos.filter(photo => photo !== filename)]);
 	}
 	
+
   return (
     <>
       <div className='flex gap-2'>
